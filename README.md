@@ -56,8 +56,7 @@ ECT/
 │   ├── examples/                   # Sample datasets
 │   ├── models/                    # Pre-trained models
 │   ├── processed/                 # Analysis results
-│   ├── test_data/                 # Test datasets
-│   └── elongated_morphology/      # Elongated cell data
+│   └── test_data/                 # Test datasets
 ├── docs/                          # Documentation and thesis
 │   ├── LR_Thesis.pdf             # Main thesis document
 │   └── *.html                     # Analysis reports
