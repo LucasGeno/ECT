@@ -1,0 +1,26 @@
+{
+  "project": {
+    "name": "E. coli Tracking (ECT)",
+    "version": "1.0.0",
+    "description": "Bacterial cell tracking and analysis framework"
+  },
+  "data": {
+    "pixel_size_um": 0.065,
+    "frame_interval_min": 0.5,
+    "default_models": [
+      "omnipose_300e",
+      "cellpose_custom",
+      "delta2_model"
+    ]
+  },
+  "analysis": {
+    "min_cycle_frames": 4,
+    "boundary_margin_frames": 3,
+    "bootstrap_samples": 5000
+  },
+  "paths": {
+    "data_dir": "data",
+    "results_dir": "results",
+    "figures_dir": "docs"
+  }
+}
