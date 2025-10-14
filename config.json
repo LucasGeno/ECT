@@ -2,7 +2,7 @@
   "project": {
     "name": "E. coli Tracking (ECT)",
     "version": "1.0.0",
-    "description": "Bacterial cell tracking and analysis framework"
+    "description": "E. coli single cell segmentation and tracking framework"
   },
   "data": {
     "pixel_size_um": 0.065,
