@@ -1,0 +1,44 @@
+name: tracking_env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  # Core numerics & IO
+  - numpy
+  - scipy
+  - pandas
+  - scikit-image
+  - matplotlib
+  - tifffile
+  - imageio
+  - h5py
+  - zarr
+  - numba
+  # Stats & plotting helpers
+  - statsmodels
+  - seaborn
+  # Tabular IO for parquet
+  - pyarrow
+  - fastparquet
+  # ML utils occasionally used
+  - scikit-learn
+  # Jupyter
+  - ipykernel
+  - jupyterlab
+  # Viewer stack (Qt via PySide2 is the stable path for napari)
+  - napari
+  - pyside2
+  - napari-matplotlib
+  - napari-svg
+  # Quality-of-life/logging
+  - rich
+  - loguru
+  # Optional but useful
+  - pint
+  - pooch
+  # Pin to conda-forge’s OpenMP runtime on macOS
+  - llvm-openmp
+  # --- pip section for packages not well maintained on conda ---
+  - pip
+  - pip:
+      - "btrack[napari]"   # tracker + napari plugin
