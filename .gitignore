@@ -1,3 +1,4 @@
 /data
 /src/data/__pycache__
 data.zip
+.DS_Store
