@@ -1,6 +1,9 @@
 # E. coli Tracking (ECT) Project
 
-A comprehensive framework for bacterial cell tracking, segmentation, and analysis using deep learning and classical computer vision methods.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17351896.svg)](https://doi.org/10.5281/zenodo.17351896)
+
+A framework for bacterial cell segmentation, tracking, and growth analysis using deep learning and classical image processing.
+
 
 ## Overview
 
@@ -9,6 +12,53 @@ This project provides tools and analysis pipelines for:
 - **Cell Tracking**: Lineage tracking and cycle analysis
 - **Morphological Analysis**: Cell shape and size measurements
 - **Growth Dynamics**: Population and single-cell growth analysis
+
+## Quick Access Options
+
+### Option 1: View Pre-computed Results (Recommended for Quick Review)
+The complete analysis results are available as HTML reports in the `docs/` folder:
+- **Model Comparison**: `docs/model_comparison_final.html`
+- **Elongated Morphology**: `docs/elongated_morphology_validation.html`
+- **Tracking Analysis**: `docs/tracking_cycle_analysis.html`
+- **Thesis Document**: `docs/LR_Thesis.pdf`
+
+These reports summarize all major analyses and can be viewed directly in a browser (no setup required)
+
+### Option 2: Download Datasets and Re-run Analysis
+For full reproducibility, download the complete dataset from Zenodo and follow the setup instructions below.
+
+## Dataset Access
+
+### Download from Zenodo
+
+**Dataset DOI**: [10.5281/zenodo.17351896](https://doi.org/10.5281/zenodo.17351896)
+
+**Citation**:
+```
+Reed, L. (2025). E. coli Tracking (ECT) Dataset: Time-lapse Microscopy and Segmentation Analysis [Dataset]. Zenodo. https://doi.org/10.5281/zenodo.17351896
+```
+
+### Quick Setup for Reproducibility
+
+1. **Download the dataset**:
+   - Go to [Zenodo](https://doi.org/10.5281/zenodo.17351896)
+   - Download `data.zip` (~5GB)
+
+2. **Extract and organize**:
+   ```bash
+   # Extract downloaded data
+   unzip data.zip -d data
+   
+   # Ensure the data folder is in your project root
+   # Your structure should be: ECT/data/
+   ```
+
+3. **Verify data structure**:
+   ```bash
+   # Check that you have the expected directories
+   ls data/
+   # Should show: timelapse_data/, processed/, examples/, models/, elongated_morphology/
+   ```
 
 ## Quick Start
 
@@ -20,18 +70,28 @@ git clone https://github.com/LucasGeno/ECT.git
 cd ECT
 
 # Create conda environment
-conda create -n ect_env python=3.9
-conda activate ect_env
+# The environment file installs all dependencies needed for all notebooks, tracking, and visualization
+conda env create -f notebooks/01_env_setup/environment_tracking.yml
+conda activate tracking_env
 
-# Install dependencies
-pip install -r requirements.txt
+# Install Jupyter kernel
+python -m ipykernel install --user --name tracking_env --display-name "Python (tracking_env)"
 ```
 
-### 2. Setup Data
+### 2. Verify Data Access
 
 ```bash
-# Create data directory structure and download sample data
-python setup_data.py --download-sample --setup-models --verbose
+# Check if data directory exists and contains expected files
+python -c "
+from pathlib import Path
+data_dir = Path('data')
+if data_dir.exists():
+    print('✓ Data directory found')
+    print(f'  Contents: {list(data_dir.iterdir())}')
+else:
+    print('❌ Data directory not found')
+    print('Please download and extract data from Zenodo first')
+"
 ```
 
 ### 3. Run Analysis
@@ -52,15 +112,21 @@ jupyter lab
 
 ```
 ECT/
-├── data/                          # Data directory (created by setup_data.py)
-│   ├── examples/                   # Sample datasets
-│   ├── models/                    # Pre-trained models
-│   ├── processed/                 # Precomputed model outputs, test dataset
-│   ├── training_data/             # Model training dataset (images + GT masks)
-│   └── timelapse_data/            # timelapse datasets
+├── data/                          # Data directory (download from Zenodo)
+│   ├── timelapse_data/            # Time-lapse datasets (LB & M9)
+│   │   ├── LB_data/              # LB medium dataset
+│   │   └── M9_data/              # M9 medium dataset
+│   ├── processed/                 # Precomputed model outputs
+│   │   ├── precomputed/          # Test datasets and results
+│   │   └── train/                # Training datasets
+│   ├── elongated_morphology/     # Elongated cell validation dataset
+│   ├── examples/                 # Sample datasets
+│   └── models/                   # Pre-trained models
 ├── docs/                          # Documentation and thesis
 │   ├── LR_Thesis.pdf             # Main thesis document
-│   └── *.html                     # Analysis reports
+│   ├── model_comparison_final.html
+│   ├── elongated_morphology_validation.html
+│   └── tracking_cycle_analysis.html
 ├── notebooks/                     # Jupyter notebooks
 │   ├── 01_env_setup/             # Environment setup
 │   ├── 02_data_preprocessing/    # Data loading and preprocessing
@@ -71,18 +137,38 @@ ECT/
 │   ├── data/                     # Data loading utilities
 │   └── utils/                    # Utility functions
 ├── setup_data.py                # Data setup script
-├── requirements.txt             # Python dependencies
 └── README.md                    # This file
 ```
 
-## Data Requirements
+## Dataset Information
 
-### Input Data Format
+### Available Datasets
+
+**Primary Datasets (from Zenodo):**
+
+1. **Time-lapse Datasets** (`data/timelapse_data/`):
+   - **LB Dataset**: 361 frames, rich growth conditions
+   - **M9 Dataset**: 601 frames, minimal growth conditions
+   - **Format**: TIFF stacks with corresponding masks and tracking data
+
+2. **Training/Test Datasets** (`data/processed/`):
+   - **Training Set**: 576 frames (288 LB + 288 M9)
+   - **Test Set**: 118 frames (45 LB + 73 M9)
+   - **Precomputed Results**: 1,498 segmentation outputs from 7 models
+
+3. **Specialized Datasets**:
+   - **Elongated Morphology**: 180 frames with filamentous cells
+   - **Pre-trained Models**: 7 segmentation models
+   - **Example Data**: Sample datasets for testing
+
+### Data Format Specifications
 
 **Time-lapse Images:**
 - Format: TIFF stack (.tif)
-- Dimensions: (time, height, width) or (time, height, width, channels)
-- Naming: `original_images.tif`
+- Dimensions: (time, height, width)
+- Pixel size: 0.065 µm/px
+- Frame interval: 0.5 min
+- Naming: `original_images.tif`, `bf_frames.tif`
 
 **Segmentation Masks:**
 - Format: TIFF stack (.tif)
@@ -92,14 +178,7 @@ ECT/
 **Tracking Data:**
 - Format: Parquet (.parquet) or CSV (.csv)
 - Required columns: `track_id`, `t`, `area`, `parent`
-- Optional columns: `x`, `y`, `width`, `length`
-
-### Sample Data
-
-The project includes sample datasets for testing:
-- **LB Medium**: Rich growth conditions
-- **M9 Medium**: Minimal growth conditions
-- **Elongated Morphology**: LB Medium with some filamentous cells
+- Optional columns: `x`, `y`, `width`, `length`, `generation`
 
 ## Analysis Workflow
 
@@ -221,27 +300,33 @@ The project uses a configuration file (`config.json`) with default settings:
 
 1. **Data directory not found**
    ```bash
-   python setup_data.py
+   # Download and extract data from Zenodo first
+   # Then verify structure:
+   ls data/
    ```
 
 2. **Missing dependencies**
    ```bash
-   pip install -r requirements.txt
+   # Use the environment setup notebook:
+   # notebooks/01_env_setup/01_environment_setup.ipynb
    ```
 
 3. **CUDA/GPU issues**
    - Install appropriate CUDA version
    - Check PyTorch installation
+   - Use CPU-only version if needed
 
 4. **Memory issues**
    - Use smaller datasets for testing
    - Process data in chunks
+   - Consider using the HTML reports instead
 
 ### Getting Help
 
-- Check the notebooks for examples
-- Review the documentation in `docs/`
-- Examine the thesis for detailed methodology
+- **Quick Review**: Check HTML reports in `docs/` folder
+- **Full Analysis**: Follow the notebook sequence
+- **Detailed Methods**: Read `docs/LR_Thesis.pdf`
+- **Data Issues**: Verify Zenodo download and extraction
 
 
 
@@ -250,6 +335,21 @@ The project uses a configuration file (`config.json`) with default settings:
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 
+## Citation
+
+If you use this dataset or code in your research, please cite:
+
+**Dataset**:
+```
+Reed, L. (2025). E. coli Tracking (ECT) Dataset: Time-lapse Microscopy and Segmentation Analysis [Dataset]. Zenodo. https://doi.org/10.5281/zenodo.17351896
+```
+
+**Thesis**:
+```
+**Thesis (in preparation)**:  
+Reed, L. (2025). *Deep Learning-Enhanced Segmentation and Tracking of E. coli in Time-Lapse Microscopy*. MSc Thesis, Vrije Universiteit Amsterdam.
+```
+
 ## Acknowledgments
 
 - Omnipose and Cellpose communities
@@ -257,3 +357,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Napari project
 - Scientific Python ecosystem
 - O2 lab
+- J. van Heerden (supervisor)
+- P. Savakis (daily supervisor)
