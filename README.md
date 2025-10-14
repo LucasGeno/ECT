@@ -55,8 +55,9 @@ ECT/
 ├── data/                          # Data directory (created by setup_data.py)
 │   ├── examples/                   # Sample datasets
 │   ├── models/                    # Pre-trained models
-│   ├── processed/                 # Analysis results
-│   └── test_data/                 # Test datasets
+│   ├── processed/                 # Precomputed model outputs, test dataset
+│   ├── training_data/             # Model training dataset (images + GT masks)
+│   └── timelapse_data/            # timelapse datasets
 ├── docs/                          # Documentation and thesis
 │   ├── LR_Thesis.pdf             # Main thesis document
 │   └── *.html                     # Analysis reports
@@ -68,9 +69,6 @@ ECT/
 │   └── 05_tracking_analysis/     # Tracking and cycle analysis
 ├── src/                          # Source code modules
 │   ├── data/                     # Data loading utilities
-│   ├── analysis/                 # Analysis functions
-│   ├── segmentation/             # Segmentation models
-│   ├── tracking/                 # Tracking algorithms
 │   └── utils/                    # Utility functions
 ├── setup_data.py                # Data setup script
 ├── requirements.txt             # Python dependencies
@@ -155,9 +153,9 @@ from src.data.loader import DataLoader
 loader = DataLoader()
 
 # Load sample data
-images = loader.load_image_stack('original_images.tif', 'test_data/LB_data')
-masks = loader.load_masks('masks.tif', 'test_data/LB_data')
-tracks = loader.load_tracking_data('tracks_LB_enhanced.parquet', 'test_data/LB_data/napari')
+images = loader.load_image_stack('original_images.tif', 'timelapse_data/LB_data')
+masks = loader.load_masks('masks.tif', 'timelapse_data/LB_data')
+tracks = loader.load_tracking_data('tracks_LB_enhanced.parquet', 'timelapse_data/LB_data/napari')
 ```
 
 ### Quick Data Check
