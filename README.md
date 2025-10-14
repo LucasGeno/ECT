@@ -1,170 +1,262 @@
-# E. coli Tracking and Analysis Pipeline
+# E. coli Tracking (ECT) Project
 
-This repository contains code for segmentation, tracking, and analysis of E. coli cells in time-lapse microscopy images. The pipeline combines Omnipose for segmentation and btrack for cell tracking, providing a comprehensive solution for analyzing bacterial growth dynamics and morphological characteristics.
+A comprehensive framework for bacterial cell tracking, segmentation, and analysis using deep learning and classical computer vision methods.
 
-## Features
+## Overview
 
-- High-accuracy cell segmentation using Omnipose with domain-specific training
-- Robust cell tracking with Bayesian tracking (btrack) and napari visualization
-- Comprehensive morphological feature extraction and elongated cell analysis
-- Growth analysis with Painter-Marr balanced growth validation
-- Model comparison framework (Omnipose, Cellpose, DeLTA2, Random Forest Watershed)
-- Media condition comparison (LB vs M9)
-- Visualization tools for results interpretation
-- Quality control and validation metrics
+This project provides tools and analysis pipelines for:
+- **Cell Segmentation**: Multiple deep learning models (Omnipose, Cellpose, DeLTA2) and a classical method
+- **Cell Tracking**: Lineage tracking and cycle analysis
+- **Morphological Analysis**: Cell shape and size measurements
+- **Growth Dynamics**: Population and single-cell growth analysis
 
-## Installation
+## Quick Start
 
-1. Clone the repository:
+### 1. Setup Environment
+
 ```bash
+# Clone the repository
 git clone https://github.com/LucasGeno/ECT.git
 cd ECT
+
+# Create conda environment
+conda create -n ect_env python=3.9
+conda activate ect_env
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-2. Create the conda environment:
+### 2. Setup Data
+
 ```bash
-conda env create -f environment.yml
-conda activate ecoli-tracking
+# Create data directory structure and download sample data
+python setup_data.py --download-sample --setup-models --verbose
 ```
 
-3. For Omnipose-specific setup, follow the detailed instructions in:
-   - `notebooks/01_env_setup/install_omnipose.md`
-   - `notebooks/01_env_setup/omni_env_setup_mac.ipynb` (for macOS users)
+### 3. Run Analysis
 
-## Usage
+```bash
+# Start Jupyter Lab
+jupyter lab
 
-The pipeline is organized into sequential notebook-based workflows:
-
-### 1. **Environment Setup** (`01_env_setup/`)
-   - `01_environment_setup.ipynb` - Basic environment validation
-   - `omni_env_setup_mac.ipynb` - Omnipose installation for macOS
-   - `tracking_env_setup.ipynb` - Tracking environment setup
-   - `install_omnipose.md` - Detailed Omnipose installation guide
-
-### 2. **Data Preprocessing** (`02_data_preprocessing/`)
-   - `data_loader.ipynb` - Load and validate microscopy time-lapse data
-   - `data_preperation.ipynb` - Prepare images for segmentation
-   - `data_preprocess.ipynb` - Advanced preprocessing workflows
-
-### 3. **Model Comparison** (`03_model_comparison/`)
-   - `model_comparison_final.ipynb` - Comprehensive evaluation of segmentation models
-     - Omnipose (300e, 30e variants)
-     - Cellpose Custom
-     - DeLTA2
-     - Random Forest Watershed
-
-### 4. **Elongated Morphology Analysis** (`04_elongated_morphology/`)
-   - `elongated_morphology_validation.ipynb` - Analysis of cell filamentation and morphological features
-
-### 5. **Tracking Analysis** (`05_tracking_analysis/`)
-   - `tracking_cycle_analysis.ipynb` - Cell cycle analysis with Painter-Marr validation
+# Open notebooks in order:
+# 1. notebooks/01_env_setup/01_environment_setup.ipynb
+# 2. notebooks/02_data_preprocessing/data_loader.ipynb
+# 3. notebooks/03_model_comparison/model_comparison_final.ipynb
+# 4. notebooks/04_elongated_morphology/elongated_morphology_validation.ipynb
+# 5. notebooks/05_tracking_analysis/tracking_cycle_analysis.ipynb
+```
 
 ## Project Structure
 
 ```
 ECT/
-├── data/                           # Data directory
-│   ├── examples/                   # Example datasets
-│   │   ├── LB_medium/             # LB medium time-lapse data
-│   │   ├── LB_sample/             # LB sample data
-│   │   ├── M9_sample/             # M9 sample data
-│   │   └── public/                # Public datasets
-│   ├── models/                     # Trained models
-│   │   ├── omnipose_1ch_2cl_e300   # Primary Omnipose model
-│   │   ├── omni_80_24e            # Alternative model
-│   │   └── omnipose_trainset/     # Training set models
-│   ├── processed/                  # Processed data and results
-│   └── test_data/                  # Test datasets for validation
-│       ├── LB_data/               # LB test data with ground truth
-│       └── M9_data/               # M9 test data with ground truth
-│
-├── src/                           # Source code modules
-│   ├── analysis/                  # Analysis utilities
-│   ├── data/                      # Data loading and preprocessing
-│   ├── segmentation/              # Segmentation code
-│   ├── tracking/                  # Tracking code
-│   └── utils/                     # Shared utilities
-│
-├── notebooks/                     # Analysis notebooks
+├── data/                          # Data directory (created by setup_data.py)
+│   ├── examples/                   # Sample datasets
+│   ├── models/                    # Pre-trained models
+│   ├── processed/                 # Analysis results
+│   ├── test_data/                 # Test datasets
+│   └── elongated_morphology/      # Elongated cell data
+├── docs/                          # Documentation and thesis
+│   ├── LR_Thesis.pdf             # Main thesis document
+│   └── *.html                     # Analysis reports
+├── notebooks/                     # Jupyter notebooks
 │   ├── 01_env_setup/             # Environment setup
-│   ├── 02_data_preprocessing/    # Data preprocessing
+│   ├── 02_data_preprocessing/    # Data loading and preprocessing
 │   ├── 03_model_comparison/      # Model evaluation
-│   ├── 04_elongated_morphology/  # Morphological analysis
-│   └── 05_tracking_analysis/     # Tracking and growth analysis
-│
-├── configs/                       # Configuration files
-│   ├── experiment_config.yaml    # General experiment settings
-│   ├── omnipose_config.yaml      # Omnipose parameters
-│   └── tracking_config.yaml      # Tracking parameters
-│
-├── docs/                          # Generated documentation
-│   ├── elongated_morphology_validation.html
-│   ├── model_comparison_final.html
-│   └── tracking_cycle_analysis.html
-│
-├── results/                       # Analysis outputs
-│   ├── figures/                   # Generated figures
-│   ├── models/                    # Analysis results
-│   └── tables/                    # Summary tables
-│
-├── environment.yml               # Conda environment specification
-├── setup.py                     # Package setup
+│   ├── 04_elongated_morphology/  # Elongated cell analysis
+│   └── 05_tracking_analysis/     # Tracking and cycle analysis
+├── src/                          # Source code modules
+│   ├── data/                     # Data loading utilities
+│   ├── analysis/                 # Analysis functions
+│   ├── segmentation/             # Segmentation models
+│   ├── tracking/                 # Tracking algorithms
+│   └── utils/                    # Utility functions
+├── setup_data.py                # Data setup script
+├── requirements.txt             # Python dependencies
 └── README.md                    # This file
 ```
 
-## Key Analysis Workflows
+## Data Requirements
 
-### Model Performance Evaluation
-The `model_comparison_final.ipynb` notebook provides comprehensive evaluation of different segmentation approaches:
-- Quantitative metrics (IoU, precision, recall)
-- Morphological accuracy assessment
-- Computational performance comparison
+### Input Data Format
 
-### Growth Analysis and Validation
-The `tracking_cycle_analysis.ipynb` notebook implements:
-- Painter-Marr balanced growth validation
-- Cell cycle parsing and analysis
-- Growth rate calculations
-- Media condition comparisons
+**Time-lapse Images:**
+- Format: TIFF stack (.tif)
+- Dimensions: (time, height, width) or (time, height, width, channels)
+- Naming: `original_images.tif`
 
-### Elongated Cell Morphology
-The `elongated_morphology_validation.ipynb` notebook focuses on:
-- Detection and analysis of cell filamentation
-- Morphological feature extraction
-- Statistical validation of morphological changes
+**Segmentation Masks:**
+- Format: TIFF stack (.tif)
+- Values: Integer labels (0 = background, >0 = cell ID)
+- Naming: `masks.tif`
+
+**Tracking Data:**
+- Format: Parquet (.parquet) or CSV (.csv)
+- Required columns: `track_id`, `t`, `area`, `parent`
+- Optional columns: `x`, `y`, `width`, `length`
+
+### Sample Data
+
+The project includes sample datasets for testing:
+- **LB Medium**: Rich growth conditions
+- **M9 Medium**: Minimal growth conditions
+- **Elongated Morphology**: LB Medium with some filamentous cells
+
+## Analysis Workflow
+
+### 1. Data Preprocessing
+- Load and inspect microscopy data
+- Validate data quality
+
+### 2. Model Comparison
+- Evaluate segmentation models
+- Compare performance metrics
+- Generate publication figures
+
+### 3. Morphological Analysis
+- Analyze cell shapes and sizes
+- Validate on elongated cells
+- Compute width distributions
+
+### 4. Tracking Analysis
+- Parse cell lineages
+- Compute generation times
+- Validate balanced growth
+
+## Key Features
+
+### Segmentation Models
+- **Omnipose**: State-of-the-art bacterial segmentation (morphologically-independent)
+- **Cellpose**: General-purpose cell segmentation (generalist)
+- **DeLTA2**: Deep learning tracking (binary masks)
+- **Random Forest Watershed**: Classical method
+
+### Analysis Capabilities
+- **Cell Counting**: Accurate cell enumeration
+- **Morphometrics**: Size and shape measurements
+- **Lineage Tracking**: Parent-child relationships
+- **Growth Analysis**: Population and single-cell dynamics
+- **Cycle Analysis**: Generation time computation
+
+### Validation Methods
+- **Cross-scale Validation**: Painter-Marr ratio analysis
+- **Bootstrap Confidence Intervals**: Statistical uncertainty
+- **Bias Correction**: Track vs. cycle time comparison
+
+## Usage Examples
+
+### Basic Data Loading
+
+```python
+from src.data.loader import DataLoader
+
+# Initialize loader
+loader = DataLoader()
+
+# Load sample data
+images = loader.load_image_stack('original_images.tif', 'test_data/LB_data')
+masks = loader.load_masks('masks.tif', 'test_data/LB_data')
+tracks = loader.load_tracking_data('tracks_LB_enhanced.parquet', 'test_data/LB_data/napari')
+```
+
+### Quick Data Check
+
+```python
+from src.data.loader import quick_data_check
+
+# Check available data
+quick_data_check()
+```
+
+### Model Evaluation
+
+```python
+# Run model comparison (see notebooks/03_model_comparison/)
+# This will generate performance metrics and figures
+```
 
 ## Configuration
 
-The pipeline uses YAML configuration files:
+The project uses a configuration file (`config.json`) with default settings:
 
-- `experiment_config.yaml` - General settings, data paths, analysis parameters
-- `omnipose_config.yaml` - Omnipose segmentation parameters
-- `tracking_config.yaml` - Cell tracking and analysis parameters
+```json
+{
+  "data": {
+    "pixel_size_um": 0.065,
+    "frame_interval_min": 0.5
+  },
+  "analysis": {
+    "min_cycle_frames": 4,
+    "boundary_margin_frames": 3,
+    "bootstrap_samples": 5000
+  }
+}
+```
 
-## Data Requirements
+## Dependencies
 
-The pipeline expects the following data structure:
-- Raw microscopy images in TIFF format
-- Ground truth masks for validation
-- Metadata files for experimental conditions
-- Pre-computed segmentation results for comparison
+### Core Requirements
+- Python 3.9+
+- NumPy, Pandas, SciPy
+- Matplotlib, Seaborn
+- scikit-image, scikit-learn
 
-## Example Datasets
+### Deep Learning
+- PyTorch
+- Cellpose
+- Omnipose
 
-The repository includes example datasets for:
-- **LB medium**: Rich medium with rapid growth
-- **M9 medium**: Minimal medium with slower growth
-- **Gold standard**: Manually annotated ground truth
-- **Test cases**: Cell division, missing masks, under-segmentation
+### Data Formats
+- tifffile
+- h5py
+- parquet
+
+### Visualization
+- Napari (recommended)
+- Fiji
+- Jupyter Lab
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Data directory not found**
+   ```bash
+   python setup_data.py
+   ```
+
+2. **Missing dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **CUDA/GPU issues**
+   - Install appropriate CUDA version
+   - Check PyTorch installation
+
+4. **Memory issues**
+   - Use smaller datasets for testing
+   - Process data in chunks
+
+### Getting Help
+
+- Check the notebooks for examples
+- Review the documentation in `docs/`
+- Examine the thesis for detailed methodology
 
 
-## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
 
 ## Acknowledgments
 
-- Omnipose team for the segmentation model
-- btrack developers for the tracking algorithm
-- Systems Biology Lab Amsterdam for support and resources
-- Contributors to the cell tracking and analysis community
+- Omnipose and Cellpose communities
+- DeLTA2 developers
+- Napari project
+- Scientific Python ecosystem
+- O2 lab
