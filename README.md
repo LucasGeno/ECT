@@ -12,6 +12,7 @@ This project provides tools and analysis pipelines for:
 - **Cell Tracking**: Lineage tracking and cycle analysis
 - **Morphological Analysis**: Cell shape and size measurements
 - **Growth Dynamics**: Population and single-cell growth analysis
+
 ---
 
 ## Quick Access Options
@@ -27,6 +28,7 @@ The complete analysis results are available as HTML reports in the `docs/` folde
 
 ### Option 2: Download Datasets and Re-run Analysis
 For full reproducibility, download the complete dataset from Zenodo and follow the setup below.
+
 ---
 
 ## Dataset Access
