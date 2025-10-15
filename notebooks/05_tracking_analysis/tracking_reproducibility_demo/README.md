@@ -37,37 +37,5 @@ napari
   - **M9**: `btrack_configs/M9_ROI1_config.json`
 - Run tracking algorithm
 
-### 5. Visualize Lineages
-- Open the **Arboretum** plugin
-- Select the tracks layer
-- Double-click any cell to view its lineage tree
-- Navigate through the family tree interactively
-
-### 6. Save Results (Optional)
-```python
-# Save the complete Napari session
-viewer.layers.save("LB_lineage.layers")
-```
-
-## Configuration Details
-
-The provided configurations are optimized for:
-- **LB Medium**: Rich growth conditions, higher cell density
-- **M9 Medium**: Minimal growth conditions, lower cell density
-
-Both configurations include:
-- Motion model parameters for bacterial tracking
-- Hypothesis model settings for cell division detection
-- Optimized search radii and thresholds
-
-## Troubleshooting
-
-- **Plugin not visible**: Restart Napari after environment activation
-- **Tracking errors**: Check mask format (integer labels, 0=background)
-- **Performance issues**: Reduce dataset size for testing
-
-## Related Analysis
-
-This demo reproduces the tracking analysis from:
-- `notebooks/05_tracking_analysis/tracking_cycle_analysis.ipynb`
-- See `docs/tracking_cycle_analysis.html` for complete results
+5) Visualize in Napari; optionally save a layer bundle:
+   viewer.layers.save("LB_lineage.layers")
